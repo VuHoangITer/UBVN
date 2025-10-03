@@ -1,0 +1,297 @@
+{% extends "base.html" %} {% block title %}Giới thiệu - {{ site_name }}{%
+endblock %} {% block extra_css %}
+<style>
+  /* Page Header Styling */
+  .page-header {
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    opacity: 0.3;
+  }
+
+  .page-header h1 {
+    position: relative;
+    z-index: 1;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .breadcrumb {
+    background: transparent;
+    position: relative;
+    z-index: 1;
+  }
+
+  .breadcrumb-item a {
+    color: rgba(0, 0, 0, 0.9);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .breadcrumb-item a:hover {
+    color: white;
+  }
+
+  .breadcrumb-item.active {
+    color: rgba(8, 0, 0, 0.8);
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(4, 4, 4, 0.7);
+  }
+
+  /* About Section Styling */
+  .about-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .about-image-wrapper:hover {
+    transform: translateY(-10px);
+  }
+
+  .about-image-wrapper img {
+    transition: transform 0.5s ease;
+  }
+
+  .about-image-wrapper:hover img {
+    transform: scale(1.05);
+  }
+
+  .about-content h2 {
+    color: #2d3748;
+    position: relative;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+  }
+
+  .about-content h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+  }
+
+  .about-content .lead {
+    color: #4a5568;
+    font-size: 1.15rem;
+    line-height: 1.8;
+  }
+
+  .about-content ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .about-content ul li {
+    padding: 10px 0;
+    padding-left: 30px;
+    position: relative;
+    color: #4a5568;
+    transition: color 0.3s;
+  }
+
+  .about-content ul li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .about-content ul li:hover {
+    color: #2d3748;
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    height: 100%;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+  }
+
+  .stat-card i {
+    transition: transform 0.3s ease;
+  }
+
+  .stat-card:hover i {
+    transform: scale(1.2) rotate(5deg);
+  }
+
+  .stat-card h3 {
+    color: #2d3748;
+    font-weight: 700;
+    margin-top: 1rem;
+    font-size: 2rem;
+  }
+
+  .stat-card p {
+    color: #718096;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+  }
+
+  /* Icon Styling */
+  .stat-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #667eea 100%);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .stat-icon i {
+    color: white !important;
+    font-size: 2rem !important;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .page-header h1 {
+      font-size: 1.8rem;
+    }
+
+    .about-content h2 {
+      font-size: 1.5rem;
+    }
+
+    .stat-card {
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="page-header py-5">
+  <div class="container">
+    <h1 class="fw-bold mb-3">Giới thiệu</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+          <a href="{{ url_for('main.index') }}">Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item active">Giới thiệu</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-6 mb-4 mb-lg-0 fade-in-up">
+        <div class="about-image-wrapper">
+          <img
+            src="{{ url_for('static', filename='img/logo.png') }}"
+            class="img-fluid"
+            alt="About Us"
+          />
+        </div>
+      </div>
+      <div class="col-lg-6 about-content fade-in-up">
+        <h2 class="fw-bold">Về chúng tôi</h2>
+        <p class="lead">
+          Chúng tôi là công ty hàng đầu trong lĩnh vực cung cấp các loại cát sấy
+        </p>
+        <p>
+          Với hơn 10 năm kinh nghiệm, chúng tôi tự hào mang đến cho khách hàng:
+        </p>
+        <ul>
+          <li>Sản phẩm chính hãng 100%</li>
+          <li>Sản phẩm tốt nhất thị trường</li>
+          <li>Giá cả cạnh tranh nhất trong phân khúc</li>
+          <li>Dịch vụ khách hàng tận tâm 24/7</li>
+          <li>Bảo hành chính hãng toàn quốc</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-5">
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card text-center fade-in-up">
+          <div class="stat-icon mx-auto">
+            <i class="bi bi-trophy"></i>
+          </div>
+          <h3>10+</h3>
+          <p class="text-muted">Năm kinh nghiệm</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card text-center fade-in-up">
+          <div class="stat-icon mx-auto">
+            <i class="bi bi-people"></i>
+          </div>
+          <h3>50K+</h3>
+          <p class="text-muted">Khách hàng hài lòng</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card text-center fade-in-up">
+          <div class="stat-icon mx-auto">
+            <i class="bi bi-box-seam"></i>
+          </div>
+          <h3>Đa dạng</h3>
+          <p class="text-muted">Sản phẩm phong phú</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card text-center fade-in-up">
+          <div class="stat-icon mx-auto">
+            <i class="bi bi-award"></i>
+          </div>
+          <h3>Sản phẩm</h3>
+          <p class="text-muted">Chất lượng cao</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
