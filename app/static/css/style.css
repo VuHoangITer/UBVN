@@ -134,63 +134,101 @@ html {
   color: #2196f3 !important;
 }
 
-/* ==================== BANNER CAROUSEL ==================== */
+/* ==================== BANNER CAROUSEL - RESPONSIVE FIX ==================== */
+
+/* Desktop: Giữ nguyên */
 .carousel-item img {
   height: 500px;
-  object-fit: cover;
+  object-fit: contain; /* Thay cover → contain để không crop */
+  object-position: center; /* Căn giữa ảnh */
   width: 100%;
+  background: linear-gradient(135deg, #f8f9fa 0%, #dee2e6 100%);
+  /* Background đẹp khi ảnh không full */
 }
 
-.carousel-caption {
-  background: rgba(0, 0, 0, 0);
-  padding: 2rem;
-  border-radius: 12px;
-  bottom: 3rem;
-  left: 50%;
-  right: auto;
-  transform: translateX(-50%);
-  max-width: 90%;
+/* Wrapper để thêm background cho carousel */
+.carousel-item {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  min-height: 500px;
 }
 
-.carousel-caption h2 {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+/* Tablet: Giảm chiều cao */
+@media (max-width: 991px) {
+  .carousel-item img {
+    height: 400px;
+  }
+
+  .carousel-item {
+    min-height: 400px;
+  }
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 3rem;
-  height: 3rem;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 50%;
-}
-
-.carousel-indicators button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
+/* Mobile: Tối ưu cho màn hình nhỏ */
 @media (max-width: 768px) {
   .carousel-item img {
     height: 300px;
+    object-fit: contain; /* Vẫn giữ contain */
+  }
+
+  .carousel-item {
+    min-height: 300px;
   }
 
   .carousel-caption {
     padding: 1rem;
     bottom: 1rem;
+    max-width: 95%;
   }
 
   .carousel-caption h2 {
     font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
   }
 
   .carousel-caption p {
-    font-size: 0.9rem;
-    display: none;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .carousel-caption .btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1.5rem !important;
   }
 }
 
-/* ==================== PRODUCT CARD ==================== */
+/* Mobile nhỏ (< 576px): Tối ưu tối đa */
+@media (max-width: 576px) {
+  .carousel-item img {
+    height: 250px;
+  }
+
+  .carousel-item {
+    min-height: 250px;
+  }
+
+  .carousel-caption h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .carousel-caption p {
+    display: none; /* Ẩn mô tả trên màn hình rất nhỏ */
+  }
+}
+
+/* Nút điều khiển carousel - Tối ưu cho mobile */
+@media (max-width: 768px) {
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .carousel-indicators button {
+    width: 8px;
+    height: 8px;
+  }
+}
+
 /* ==================== PRODUCT CARD ==================== */
 .product-card {
   transition: all 0.3s ease;
