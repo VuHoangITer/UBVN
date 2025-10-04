@@ -157,7 +157,7 @@ class Blog(db.Model):
     image_title = db.Column(db.String(255))
     image_caption = db.Column(db.Text)
 
-    # ✅ THÊM CÁC TRƯỜNG SEO MỚI
+    # SEO
     meta_title = db.Column(db.String(70))  # SEO title tag (50-60 ký tự tối ưu)
     meta_description = db.Column(db.String(160))  # Meta description (120-160 ký tự)
     meta_keywords = db.Column(db.String(255))  # Keywords (optional, ít quan trọng)
