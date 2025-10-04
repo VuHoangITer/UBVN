@@ -55,4 +55,12 @@ def create_app(config_class=Config):
             return '{:,.0f}'.format(value).replace(',', '.')
         return '0'
 
+    # THÊM FILTER NL2BR VÀO ĐÂY
+    @app.template_filter('nl2br')
+    def nl2br_filter(text):
+        """Convert newlines to <br> tags"""
+        if not text:
+            return ''
+        return text.replace('\n', '<br>\n')
+
     return app
