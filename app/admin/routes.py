@@ -557,7 +557,7 @@ def dashboard():
 
 # ==================== QUẢN LÝ DANH MỤC ====================
 @admin_bp.route('/categories')
-@admin_required
+@login_required
 def categories():
     """Danh sách danh mục"""
     page = request.args.get('page', 1, type=int)
@@ -568,7 +568,7 @@ def categories():
 
 
 @admin_bp.route('/categories/add', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def add_category():
     """Thêm danh mục mới"""
     form = CategoryForm()
@@ -598,7 +598,7 @@ def add_category():
 
 
 @admin_bp.route('/categories/edit/<int:id>', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def edit_category(id):
     """Sửa danh mục"""
     category = Category.query.get_or_404(id)
@@ -625,7 +625,7 @@ def edit_category(id):
 
 
 @admin_bp.route('/categories/delete/<int:id>')
-@admin_required
+@login_required
 def delete_category(id):
     """Xóa danh mục"""
     category = Category.query.get_or_404(id)
@@ -717,7 +717,7 @@ def edit_product(id):
 
 
 @admin_bp.route('/products/delete/<int:id>')
-@admin_required
+@login_required
 def delete_product(id):
     """Xóa sản phẩm"""
     product = Product.query.get_or_404(id)
@@ -798,7 +798,7 @@ def edit_banner(id):
 
 
 @admin_bp.route('/banners/delete/<int:id>')
-@admin_required
+@login_required
 def delete_banner(id):
     """Xóa banner"""
     banner = Banner.query.get_or_404(id)
@@ -1088,7 +1088,7 @@ def delete_user(id):
 
 # ==================== QUẢN LÝ LIÊN HỆ ====================
 @admin_bp.route('/contacts')
-@admin_required
+@login_required
 def contacts():
     """Danh sách liên hệ"""
     page = request.args.get('page', 1, type=int)
@@ -1099,7 +1099,7 @@ def contacts():
 
 
 @admin_bp.route('/contacts/view/<int:id>')
-@admin_required
+@login_required
 def view_contact(id):
     """Xem chi tiết liên hệ"""
     contact = Contact.query.get_or_404(id)
@@ -1113,7 +1113,7 @@ def view_contact(id):
 
 
 @admin_bp.route('/contacts/delete/<int:id>')
-@admin_required
+@login_required
 def delete_contact(id):
     """Xóa liên hệ"""
     contact = Contact.query.get_or_404(id)
