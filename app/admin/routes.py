@@ -3,9 +3,9 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
-from app.models import User, Product, Category, Banner, Blog, FAQ, Contact, Media, Project, Job
+from app.models import User, Product, Category, Banner, Blog, FAQ, Contact, Media
 from app.forms import (LoginForm, CategoryForm, ProductForm, BannerForm,
-                       BlogForm, FAQForm, UserForm, ProjectForm, JobForm)
+                       BlogForm, FAQForm, UserForm)
 from app.utils import save_upload_file, delete_file, get_albums, optimize_image
 from app.decorators import admin_required
 import shutil
