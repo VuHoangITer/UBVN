@@ -3,9 +3,9 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
-from app.models import User, Product, Category, Banner, Blog, FAQ, Contact, Media
+from app.models import User, Product, Category, Banner, Blog, FAQ, Contact, Media, Project, Job
 from app.forms import (LoginForm, CategoryForm, ProductForm, BannerForm,
-                       BlogForm, FAQForm, UserForm)
+                       BlogForm, FAQForm, UserForm, ProjectForm, JobForm)
 from app.utils import save_upload_file, delete_file, get_albums, optimize_image
 from app.decorators import admin_required
 import shutil
@@ -557,7 +557,7 @@ def dashboard():
 
 # ==================== QUẢN LÝ DANH MỤC ====================
 @admin_bp.route('/categories')
-@login_required
+@admin_required
 def categories():
     """Danh sách danh mục"""
     page = request.args.get('page', 1, type=int)
@@ -568,7 +568,7 @@ def categories():
 
 
 @admin_bp.route('/categories/add', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def add_category():
     """Thêm danh mục mới"""
     form = CategoryForm()
@@ -598,7 +598,7 @@ def add_category():
 
 
 @admin_bp.route('/categories/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def edit_category(id):
     """Sửa danh mục"""
     category = Category.query.get_or_404(id)
@@ -625,7 +625,7 @@ def edit_category(id):
 
 
 @admin_bp.route('/categories/delete/<int:id>')
-@login_required
+@admin_required
 def delete_category(id):
     """Xóa danh mục"""
     category = Category.query.get_or_404(id)
@@ -717,7 +717,7 @@ def edit_product(id):
 
 
 @admin_bp.route('/products/delete/<int:id>')
-@login_required
+@admin_required
 def delete_product(id):
     """Xóa sản phẩm"""
     product = Product.query.get_or_404(id)
@@ -798,7 +798,7 @@ def edit_banner(id):
 
 
 @admin_bp.route('/banners/delete/<int:id>')
-@login_required
+@admin_required
 def delete_banner(id):
     """Xóa banner"""
     banner = Banner.query.get_or_404(id)
@@ -1088,7 +1088,7 @@ def delete_user(id):
 
 # ==================== QUẢN LÝ LIÊN HỆ ====================
 @admin_bp.route('/contacts')
-@login_required
+@admin_required
 def contacts():
     """Danh sách liên hệ"""
     page = request.args.get('page', 1, type=int)
@@ -1099,7 +1099,7 @@ def contacts():
 
 
 @admin_bp.route('/contacts/view/<int:id>')
-@login_required
+@admin_required
 def view_contact(id):
     """Xem chi tiết liên hệ"""
     contact = Contact.query.get_or_404(id)
@@ -1113,7 +1113,7 @@ def view_contact(id):
 
 
 @admin_bp.route('/contacts/delete/<int:id>')
-@login_required
+@admin_required
 def delete_contact(id):
     """Xóa liên hệ"""
     contact = Contact.query.get_or_404(id)
@@ -1300,36 +1300,46 @@ def create_album():
 @admin_bp.route('/media/delete/<int:id>')
 @login_required
 def delete_media(id):
-    """Xóa media file"""
+    """Xóa media file (Cloudinary + local + DB)"""
     media = Media.query.get_or_404(id)
-
-    # Lưu album name trước khi xóa
     album_name = media.album
 
-    # Xóa file vật lý khỏi server
+    from app.utils import delete_file
+    import os
+
     try:
-        # Convert relative path to absolute
-        if media.filepath.startswith('/static/'):
+        # 🧹 1️⃣ Xóa ảnh trên Cloudinary nếu là URL
+        if media.filepath and "res.cloudinary.com" in media.filepath:
+            res = delete_file(media.filepath)
+            print(f"[Delete Cloudinary]: {res}")
+        else:
+            print("[Delete Cloudinary]: Bỏ qua (không phải URL Cloudinary)")
+
+        # 🧹 2️⃣ Xóa file local nếu có
+        if media.filepath and media.filepath.startswith('/static/'):
             file_path = media.filepath.replace('/static/', '')
             full_path = os.path.join(current_app.config['UPLOAD_FOLDER'], '..', file_path)
-        else:
-            full_path = os.path.join(current_app.root_path, media.filepath.lstrip('/'))
+            abs_path = os.path.abspath(full_path)
 
-        if os.path.exists(full_path):
-            os.remove(full_path)
+            if os.path.exists(abs_path):
+                os.remove(abs_path)
+                print(f"[Delete Local]: Đã xóa {abs_path}")
+            else:
+                print(f"[Delete Local]: Không tìm thấy {abs_path}")
+
     except Exception as e:
-        print(f"Error deleting file: {e}")
+        print(f"[Delete Error]: {e}")
 
-    # Xóa record khỏi DB
+    # 🧹 3️⃣ Xóa record khỏi DB
     db.session.delete(media)
     db.session.commit()
+    flash('Đã xóa file (Cloudinary + Local) thành công!', 'success')
 
-    flash('Đã xóa file thành công!', 'success')
-
-    # Redirect về album nếu đang filter
+    # 🧭 4️⃣ Redirect lại đúng album
     if album_name:
         return redirect(url_for('admin.media', album=album_name))
     return redirect(url_for('admin.media'))
+
 
 
 @admin_bp.route('/media/delete-album/<album_name>')
@@ -1503,4 +1513,3 @@ def api_media():
         } for m in media_list],
         'albums': album_names
     })
-
